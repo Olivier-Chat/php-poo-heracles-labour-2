@@ -11,6 +11,9 @@ class Fighter
     private string $image;
 
     private int $life = self::MAX_LIFE;
+
+    private ?Weapon $weapon = null;
+    private ?Shield $shield = null;
     
     public function __construct(
         string $name,
@@ -46,7 +49,7 @@ class Fighter
 
     public function fight(Fighter $adversary): void
     {
-        $damage = rand(1, $this->getStrength()) - $adversary->getDexterity();
+        $damage = rand(1, $this->getDamage()) - $adversary->getDefense();
         if ($damage < 0) {
             $damage = 0;
         }
@@ -121,5 +124,51 @@ class Fighter
         $this->dexterity = $dexterity;
 
         return $this;
+    }
+
+    /**
+     * @return Weapon|null
+     */
+    public function getWeapon(): ?Weapon
+    {
+        return $this->weapon;
+    }
+
+    /**
+     * @param Weapon|null $weapon
+     * @return Fighter
+     */
+    public function setWeapon(?Weapon $weapon): Fighter
+    {
+        $this->weapon = $weapon;
+        return $this;
+    }
+    public function getDamage():int
+    {
+        $weaponDamage = is_null($this->weapon)? 0 : $this->weapon->getDamage();
+        return $this->strength + $weaponDamage;
+    }
+    /**
+     * @return Shield|null
+     */
+    public function getShield(): ?Shield
+    {
+        return $this->shield;
+    }
+
+    /**
+     * @param Shield|null $shield
+     * @return Fighter
+     */
+    public function setShield(?Shield $shield): Fighter
+    {
+        $this->shield = $shield;
+        return $this;
+    }
+
+    public function getDefense() :int
+    {
+        $shieldProtection = is_null($this->shield)? 0 : $this->shield->getProtection();
+        return $this->dexterity + $shieldProtection;
     }
 }
